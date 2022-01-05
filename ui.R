@@ -11,12 +11,14 @@ library(slam)
 library(stringi)
 library(magrittr)
 library(tidytext)
+library(purrr)
 library(dplyr)
 library(visNetwork)
 library(tidyr)
 library(DT)
 library(stringr)
 library(tools)
+library(ggplot2)
 
 shinyUI(fluidPage(
   title = "Basic Text Analysis",
@@ -43,8 +45,9 @@ shinyUI(fluidPage(
     numericInput("connection", "Number of Max Connection with Central Node", 5),
     
     
-    textInput("concord.word",('Enter word for which you want to find concordance'),value = 'good'),
-    checkboxInput("regx","Check for regex match"),
+    textInput("concord.word",('Enter words for which you want to find concordance'),value = 'good'),
+    selectInput("case","Select the case sensitivity: ", c("case_sensitive","lowercase"), selected = "case-sensitive"),
+   
     sliderInput("window",'Concordance Window',min = 2,max = 100,5),
     
     
@@ -125,9 +128,18 @@ shinyUI(fluidPage(
                          
                 ),
                 tabPanel("Concordance",
-                         h4('Concordance'),
-                         p('Concordance allows you to see the local context around a word of interest. It does so by building a moving window of words before and after the focal word\'s every instance in the corpus. Below is the list of all instances of concordance in the corpus for your word of interest entered in the left side bar panel of this app. You can change the concordance window or word of interest in the left side bar panel.',align = "Justify"),
+                         h3('Concordance'),
+                         p('Concordance allows you to see the local context around a word of interest. 
+                           It does so by building a moving window of words before and after 
+                           the focal word\'s every instance in the corpus. 
+                           Below is the list of all instances of concordance in the corpus 
+                           for your word of interest entered in the left side bar panel of this app. 
+                           You can change the concordance window or word of interest in the left side bar panel.',align = "Justify"),
+                         h4('Plots'),
+                         plotOutput("concordPlot"),
                          #verbatimTextOutput("concordance"))
+                         DT::dataTableOutput("KeyWordTable"),
+                         h4('Concordance Table'),
                          DT::dataTableOutput("concordance")),
                 tabPanel("Downloads",
                          h4("Download DTM"),
