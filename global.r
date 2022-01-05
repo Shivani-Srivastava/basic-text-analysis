@@ -543,6 +543,107 @@ replace_bigram <- function(raw_corpus, stopw_list, min_freq = 2){
 # # testing on speech
 #speech = readLines('https://raw.githubusercontent.com/sudhir-voleti/sample-data-sets/master/PM%20speech%202014.txt')
 
+multi_string_concord <- function(corpus, 
+                                 ui_strings, 
+                                 ui_case0, 
+                                 half_win_size=10){
+  
+  # basic UI processing if needed
+  ui0a = ui_strings %>% str_replace_all(., ", ", ",") %>% 
+    str_split(., ",") %>% unlist(.); ui0a
+  
+  # make data copy nokia0 for edits
+  if (ui_case0 == "case_sensitive"){ corpus0 = corpus} else {
+    corpus0 = tolower(corpus); ui0a = tolower(ui0a)} 
+  
+  # tag matched keywrds with chars 'xx'
+  for (i in 1:length(ui0a)){
+    corpus0 = corpus0 %>% 
+      str_replace_all(., ui0a[i], paste0("xx", ui0a[i], "xx")) } # 0 s!
+  
+  # build DF with doc index num
+  df0 = corpus0 %>% 
+    data.frame(doc_ind = seq(1, length(corpus)), doc = .) %>%  
+    tibble(.) %>% unnest_tokens(., "word1", "doc", to_lower=FALSE); df0 
+  
+  # build DF with token indx num
+  df0a = data.frame(tok_number = 0, df0)
+  a1 = matrix(0, nrow=length(corpus0), ncol=1)
+  
+  for (i in 1:length(corpus0)){
+    df0b = df0a %>% filter(doc_ind == i); dim(df0b)
+    a1[i] = nrow(df0b)
+    if (nrow(df0b) > 0){
+      a0 = seq(1, nrow(df0b)); length(a0)
+      df0b$tok_number = a0; head(df0b) 
+      df0a[(df0a$doc_ind == i),] = df0b
+    } else {next} } # i loop ends. 0.22 s for nokia
+  
+  # merge DFs to get at keywrd segments
+  df0b = df0a %>% 
+    select(word1) %>% 
+    map(., function(x) str_detect(x, "xx")) %>% data.frame(.)
+  
+  df0c = data.frame(df0a, lgl = df0b) %>% filter(word1.1 == TRUE); head(df0c)
+  
+  df0d = data.frame(doc_ind = seq(1, length(corpus0)), tok_max = a1); head(df0d)        
+  
+  df0e = inner_join(df0c, df0d, by = "doc_ind") %>% 
+    select(doc_ind, tok_number, tok_max); # dim(df0e); head(df0e)
+  
+  # build segments of targeted window size
+  tok_pos = matrix(0, nrow=nrow(df0e), ncol=2); 
+  colnames(tok_pos) = c("start0", "stop0")
+  
+  k0 = half_win_size
+  for (i in 1:nrow(df0e)){
+    tok_pos[i, 1] = max(1, df0e$tok_number[i] - k0) %>% as.numeric() 
+    tok_pos[i, 2] = min(df0e$tok_number[i] + k0, df0e$tok_max[i]) %>% as.numeric() }
+  
+  df0e = data.frame(df0e, tok_pos); head(df0e)
+  
+  # combine overlapping segments in a doc
+  for (i0 in df0e$doc_ind){
+    
+    df0f = df0e[(df0e$doc_ind == i0),]
+    n1 = nrow(df0f)
+    if (n1 < 2) {next} else {
+      for (i1 in 1:(n1-1)){
+        a = df0f$start0[i1]; b = df0f$stop0[i1]
+        c = df0f$start0[i1+1]; d = df0f$stop0[i1+1]
+        if (c < b) {df0f$start0[i1+1] = a; df0f$stop0[i1] = d}  } # i1 ends
+      df0e[(df0e$doc_ind == i0),] = df0f  } # else ends
+    
+  } # i0 ends. 0.03 s for nokia
+  
+  df0g = df0e %>% select(doc_ind, start0, stop0) %>% unique(.); head(df0g)
+  
+  # extract targeted segments
+  df0h = data.frame(doc_ind = df0g$doc_ind, segments = character(nrow(df0g)))
+  for (i in 1:nrow(df0h)){
+    a0 = df0a %>% filter(doc_ind == df0h$doc_ind[i], 
+                         tok_number >= df0g$start0[i], 
+                         tok_number <= df0g$stop0[i]) %>% select(word1) 
+    
+    a1=NULL # to join strings seamlessly
+    for (j in 1:length(unlist(a0))){a1=paste(a1, unlist(a0)[j])}
+    df0h$segments[i] = a1 } # i ends. 0.2 secs for nokia
+  
+  df0h$segments = str_replace_all(df0h$segments, "xx", "**")
+  head(df0h)  # this is output for display n download
+  
+  # second output for the output tab
+  df0i = df0c %>% select(word1) %>% unlist() %>% 
+    str_replace_all("xx", "") %>% data.frame(keywrd = .) %>% 
+    count(keywrd, sort=TRUE) 
+  
+  p <- df0i %>% ggplot(aes(n, keywrd)) + geom_col() + labs(y = NULL)
+  
+  output_list = list(df0h, df0i, p)
+  
+  return(output_list) } # func ends
+
+
 
 # stopw_list <- c("dear","countrymen")
 # system.time({ bigrammed_corpus = replace_bigram(speech, min_freq = 2,stopw_list = stopw_list) }) # 0.66 secs
