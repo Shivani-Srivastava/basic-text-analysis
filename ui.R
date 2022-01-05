@@ -157,7 +157,11 @@ shinyUI(fluidPage(
                          h3("-----------------------------------------------------"),
                          h4("Download Bigram Corpus"),
                          verbatimTextOutput("bi_text"),
-                         downloadButton("download_bigram","Download Bigram Corpus"))
+                         downloadButton("download_bigram","Download Bigram Corpus"),br(),
+                h3("-----------------------------------------------------"),
+                h4("Download Multi-WordConcordance"),
+                verbatimTextOutput("MWC_text"),
+                downloadButton('download_MWC', 'Download Concordance'))
                           
           
                 
