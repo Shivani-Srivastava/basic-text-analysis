@@ -446,6 +446,12 @@ shinyServer(function(input, output,session) {
     
   })
   
+  output$MWC_text <- renderText({
+    size = dim(df_reactive())
+    dtm_size = paste("Multi-Word Concordance has  ", size[1],"(rows)"," X ", size[2],"(columns)","")
+    
+    
+  })
   
   output$bi_text <- renderText({
     size = dim(bigram_data())
@@ -507,7 +513,16 @@ shinyServer(function(input, output,session) {
     }
   )
   
-  
+  output$download_MWC <- downloadHandler(
+    filename = function() {paste(str_split(input$file$name,"\\.")[[1]][1],"_MWC.csv",collapse = "") },
+    content = function(file) {
+      
+      new_dtm <- df_reactive()
+      write.csv(new_dtm, file, row.names=T)
+      
+      
+    }
+  )
   
   
   output$downloadData1 <- downloadHandler(
