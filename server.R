@@ -77,7 +77,14 @@ shinyServer(function(input, output,session) {
   })
   
  
+  output$up_size <- renderPrint({
+    size <- dim(dataset())
+    paste0("Dimensions of uploaded data: ",size[1]," (rows) X ", size[2]," (Columns)")
+  })
   
+  output$samp_data <- DT::renderDataTable({
+    DT::datatable(head(dataset()),rownames = FALSE)
+  })
   
   dtm_tcm =  eventReactive(input$apply,{
     
