@@ -76,12 +76,13 @@ shinyUI(fluidPage(
                          downloadButton('downloadData1', 'Download Nokia Lumia reviews txt file'),br(),br(),
                          p("Please note that download will not work with RStudio interface. Download will work only in web-browsers. So open this app in a web-browser and then download the example file. For opening this app in web-browser click on \"Open in Browser\" as shown below -"),
                          img(src = "example1.png")
-                )
-                ,
-                # tabPanel("Example dataset", h4(p("Download Sample text file")),
-                #          downloadButton('downloadData1', 'Download Nokia Lumia reviews txt file'),br(),br(),
-                #          p("Please note that download will not work with RStudio interface. Download will work only in web-browsers. So open this app in a web-browser and then download the example file. For opening this app in web-browser click on \"Open in Browser\" as shown below -"),
-                #          img(src = "example1.png")),
+                ),
+                tabPanel("Data Summary",
+                         h4("Uploaded data size"),
+                         verbatimTextOutput("up_size"),
+                         h4("Sample of uploaded datasest"),
+                         DT::dataTableOutput("samp_data")
+                         ),
                 tabPanel("DTM",
                          verbatimTextOutput("dtmsize"),
                          h4("Sample DTM (Document Term Matrix) "),
