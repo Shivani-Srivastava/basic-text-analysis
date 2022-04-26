@@ -82,6 +82,15 @@ shinyServer(function(input, output,session) {
     paste0("Dimensions of uploaded data: ",size[1]," (rows) X ", size[2]," (Columns)")
   })
   
+   output$text <- renderUI({
+        req(input$file$datapath)
+        str1 <- paste("Total no of documets:", nrow(dataset()))
+        str2 <- paste("Range of sentences per document: ",min(text_summ()$Sentences),"-",max(text_summ()$Sentences))
+        #str3 <- paste("Maximum number of sentence: ",)
+        str4 <- paste("Average number of sentences per document: ",round(mean(text_summ()$Sentences),2))
+        HTML(paste(str1, str2,str4, sep = '<br/>'))
+    })
+  
   output$samp_data <- DT::renderDataTable({
     DT::datatable(head(dataset()),rownames = FALSE)
   })
