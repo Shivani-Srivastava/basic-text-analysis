@@ -82,7 +82,10 @@ shinyServer(function(input, output,session) {
     paste0("Dimensions of uploaded data: ",size[1]," (rows) X ", size[2]," (Columns)")
   })
   
-   output$text <- renderUI({
+  text_summ <- reactive({summary(quanteda::corpus(dataset()[,input$y]))})
+  quant_mod <- reactive({quanteda::corpus(dataset()[,input$y])})
+    
+    output$text <- renderUI({
         req(input$file$datapath)
         str1 <- paste("Total no of documets:", nrow(dataset()))
         str2 <- paste("Range of sentences per document: ",min(text_summ()$Sentences),"-",max(text_summ()$Sentences))
@@ -90,7 +93,14 @@ shinyServer(function(input, output,session) {
         str4 <- paste("Average number of sentences per document: ",round(mean(text_summ()$Sentences),2))
         HTML(paste(str1, str2,str4, sep = '<br/>'))
     })
-  
+
+    output$text2 <- renderUI({
+        req(input$file$datapath)
+        str2 <- paste("Range of words per document: ",min(text_summ()$Tokens),'-',max(text_summ()$Tokens))
+        #str3 <- paste("range of words per document:: ",max(text_summ()$Tokens))
+        str4 <- paste("Average number of words: ",round(mean(text_summ()$Tokens),2))
+        HTML(paste(str2,str4, sep = '<br/>'))
+    })
   output$samp_data <- DT::renderDataTable({
     DT::datatable(head(dataset()),rownames = FALSE)
   })
