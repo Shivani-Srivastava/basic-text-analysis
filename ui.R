@@ -80,6 +80,12 @@ shinyUI(fluidPage(
                 tabPanel("Data Summary",
                          h4("Uploaded data size"),
                          verbatimTextOutput("up_size"),
+                          h4("Sentence level summary"),
+                             htmlOutput("text"),
+                             hr(),
+                             h4("Token level summary"),
+                             htmlOutput("text2"),
+                             hr(),
                          h4("Sample of uploaded datasest"),
                          DT::dataTableOutput("samp_data")
                          ),
