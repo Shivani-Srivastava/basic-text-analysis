@@ -535,7 +535,7 @@ shinyServer(function(input, output,session) {
   output$download_bigram <- downloadHandler(
     filename = function() { paste(str_split(input$file$name,"\\.")[[1]][1],"_bigram_corpus.csv",collapse = " ") },
     content = function(file) {
-      write.csv(bigram_data(), file,row.names=FALSE)
+      write.csv(bigram_data(),row.names=FALSE)
     }
   )
   
