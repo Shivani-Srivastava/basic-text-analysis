@@ -2,9 +2,6 @@
 #               Basic Text Analysis             #
 #################################################
 
-library(BH)
-library(ISOCodes)
-library(RcppParallel)
 library(fastmatch)
 library(quanteda)
 library(stopwords)
