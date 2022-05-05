@@ -2,6 +2,13 @@
 #               Basic Text Analysis             #
 #################################################
 
+library(BH)
+library(ISOCodes)
+library(RcppParallel)
+library(fastmatch)
+library(quanteda)
+library(stopwords)
+
 shinyServer(function(input, output,session) {
   set.seed=2092014   
   
