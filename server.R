@@ -562,4 +562,11 @@ shinyServer(function(input, output,session) {
     }
   )
   
+  output$downloadData2 <- downloadHandler(
+    filename = function() {"OnePlus.txt"},
+    content = function(file){
+      writeLines(readLines("data/onePlus8T_reviews.txt.txt"),file)
+    }
+  )
+  
 })
