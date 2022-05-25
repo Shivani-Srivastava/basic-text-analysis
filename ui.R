@@ -75,6 +75,8 @@ shinyUI(fluidPage(
                          h4(p("Download Sample text file")),
                          downloadButton('downloadData1', 'Download Nokia Lumia reviews txt file'),br(),br(),
                          downloadButton('downloadData2', 'Download One Plus reviews txt file'), br(), br(),
+                         downloadButton('downloadData2', 'Download Uber App Store reviews CSV file'), br(), br(),
+                         downloadButton('downloadData2', 'Download Airline Tweets CSV file'), br(), br(),
                          p("Please note that download will not work with RStudio interface. Download will work only in web-browsers. So open this app in a web-browser and then download the example file. For opening this app in web-browser click on \"Open in Browser\" as shown below -"),
                          img(src = "example1.png")
                 ),
