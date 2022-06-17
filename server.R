@@ -347,7 +347,7 @@ shinyServer(function(input, output,session) {
     if (is.null(input$file)|input$apply==0) {return(NULL)}
     else {
       size = dim(t(dtm_tcm()$dtm))
-      dtm_size = paste("Term Document Matrix (TDM) size is ", size[1]," X ", size[2],". Below are the first 10 docs X top 10 tokens")
+      dtm_size = paste("Document Token Matrix size is ", size[1]," X ", size[2],". Below are the first 10 docs X top 10 tokens")
       return(dtm_size)
     }
   })
