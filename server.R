@@ -572,14 +572,14 @@ shinyServer(function(input, output,session) {
   output$downloadData3 <- downloadHandler(
   filename = function() { "uber_reviews_itune.csv" },
   content = function(file) {
-    write.csv(read.csv("data/uber_reviews_itune.csv"), file, row.names=F, col.names=F)
+    write.csv(read.csv("data/uber_reviews_itune.csv"), file, row.names=F, col.names=F, encoding = "UTF-8")
   }
 )
   
   output$downloadData4 <- downloadHandler(
   filename = function() { "airline_sentiment.csv" },
   content = function(file) {
-    write.csv(read.csv("data/airline_sentiment.csv"), file, row.names=F, col.names=F)
+    write.csv(read.csv("data/airline_sentiment.csv"), file, row.names=F, col.names=F, encoding = "UTF-8")
   }
 )
   
