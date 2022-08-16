@@ -375,8 +375,8 @@ shinyServer(function(input, output,session) {
     
     if (is.null(input$file)|input$apply==0) {return(NULL)}
     else{
-      outp_list = multi_string_concord(dataset()[,input$y],input$concord.word, input$case, input$window)
-      a0 = outp_list[[1]]
+      a0 = concordance.r(dataset()[,input$y],input$concord.word, input$window,input$regx)
+      a0
       # a0 %>%
       #   # Filter if input is anywhere, even in other words.
       #   filter_all(any_vars(grepl(input$concord.word, ., T, T))) %>% 
@@ -397,18 +397,20 @@ shinyServer(function(input, output,session) {
   output$concordPlot <- renderPlot(
     if (is.null(input$file)|input$apply==0) {return(NULL)}
     else{
-      outp_list = multi_string_concord(dataset()[,input$y],input$concord.word, input$case, input$window)
-      a0 = outp_list[[3]]
+      a0 = concordance.r(dataset()[,input$y],input$concord.word, input$window,input$regx)
+      a0
+      #outp_list = multi_string_concord(dataset()[,input$y],input$concord.word, input$case, input$window)
+      #a0 = outp_list[[3]]
       a0
     })
   
   
   output$concordance = renderDataTable({
     
-    # a0 = concordance.r(dataset()$Document,input$concord.word, input$window)
-    # concordance = a0
-    # datatable(concordance, escape = F, options = list(dom = "lt"))
-    datatable(df_reactive(), escape = F, options = list(dom = "lt"))
+    a0 = concordance.r(dataset()$Document,input$concord.word, input$window)
+    concordance = a0
+    datatable(concordance, escape = F, options = list(dom = "lt"))
+    #datatable(df_reactive(), escape = F, options = list(dom = "lt"))
   })
   
   output$KeyWordTable <- renderDataTable(
