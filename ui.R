@@ -46,6 +46,8 @@ shinyUI(fluidPage(
     
     
     textInput("concord.word",('Enter words for which you want to find concordance'),value = 'good'),
+    checkboxInput("regx","Check for regex match"),
+
     selectInput("case","Select the case sensitivity: ", c("case_sensitive","lowercase"), selected = "case-sensitive"),
    
     sliderInput("window",'Concordance Window',min = 2,max = 100,5),
